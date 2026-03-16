@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What If?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--ink:#0d1f1e;--paper:#f7faf9;--accent:#1a7a6e;--accent2:#2aa898;--accent-light:#e6f5f3;--accent-border:#b2ddd8;--accent-text:#0f5c52;--muted:#7a9490;--border:#d8e6e4;--card:#ffffff;--surface:#f0f7f6}
+html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden}
+#app{max-width:480px;margin:0 auto;padding:0 0 80px}
+.header{padding:2.5rem 1.5rem 1rem;text-align:center}
+.logo{font-family:'DM Serif Display',serif;font-size:2.6rem;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.logo em{color:var(--accent);font-style:italic}
+.tagline{font-size:.85rem;color:var(--muted);margin-top:.5rem;letter-spacing:.04em}
+.progress-wrap{padding:0 1.5rem;margin-bottom:1.5rem}
+.progress-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease}
+.step-label{font-size:.72rem;color:var(--muted);margin-top:.5rem;letter-spacing:.06em;text-transform:uppercase}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin:0 1rem 1rem}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:.25rem;line-height:1.2}
+.section-sub{font-size:.85rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.6}
+.field{margin-bottom:1rem}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:.75rem;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.field input,.field select,.field textarea{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;color:var(--ink);padding:.7rem 1rem;font-size:.95rem;font-family:'DM Sans',sans-serif;outline:none;appearance:none;transition:border-color .2s;resize:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a9490' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.btn{width:calc(100% - 2rem);margin:0 1rem;border:none;border-radius:14px;padding:1rem;font-size:1rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;letter-spacing:.02em;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{opacity:.9}
+.btn-primary.inactive{opacity:.3;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--muted);margin-top:.75rem}
+.btn:active{transform:scale(.98)}
+.char-count{font-size:.72rem;color:var(--muted);text-align:right;margin-top:.3rem}
+.decision-hint{background:var(--accent-light);border:1px solid var(--accent-border);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem}
+.decision-hint p{font-size:.82rem;color:var(--accent-text);line-height:1.6}
+.decision-hint strong{font-weight:500}
+.examples{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.example-chip{background:#fff;border:1px solid var(--accent-border);border-radius:20px;padding:.25rem .75rem;font-size:.75rem;color:var(--accent-text);cursor:pointer;transition:all .2s}
+.example-chip:hover{background:var(--accent-light)}
+.snapshot-header{padding:2rem 1.5rem 0;text-align:center}
+.snapshot-greeting{font-family:'DM Serif Display',serif;font-size:1.6rem;line-height:1.3;margin-bottom:.4rem}
+.snapshot-sub{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:1.5rem}
+.snapshot-intro{margin:0 1rem 1rem;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:16px;padding:1.25rem 1.5rem}
+.snapshot-intro p{font-size:.88rem;color:var(--accent-text);line-height:1.7}
+.stat-block{margin:0 1rem 1rem}
+.stat-item{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:.75rem;opacity:0;animation:fadeUp .5s forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.stat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.stat-label{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.stat-pct{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--accent)}
+.stat-bar-track{height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin-bottom:.5rem}
+.stat-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1.2s ease}
+.stat-message{font-size:.82rem;color:#2a4442;line-height:1.5}
+.overall-card{margin:0 1rem 1.5rem;background:var(--ink);border-radius:16px;padding:1.5rem;text-align:center}
+.overall-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#4a7a76;margin-bottom:.5rem}
+.overall-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent2);line-height:1}
+.overall-sub{font-size:.85rem;color:#7ab8b2;margin-top:.5rem}
+.overall-msg{font-family:'DM Serif Display',serif;font-size:1rem;color:#e8f5f3;margin-top:.75rem;line-height:1.5}
+.loading-screen{padding:4rem 1.5rem;text-align:center}
+.loading-title{font-family:'DM Serif Display',serif;font-size:1.6rem;line-height:1.3;margin-bottom:.75rem;color:var(--ink)}
+.loading-sub{font-size:.85rem;color:var(--muted);line-height:1.6;margin-bottom:2.5rem}
+.dots{display:flex;gap:.5rem;justify-content:center}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:dotpulse 1.4s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes dotpulse{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.result-header{padding:2rem 1.5rem 1rem;text-align:center}
+.result-name{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--muted);margin-bottom:.25rem}
+.result-title{font-family:'DM Serif Display',serif;font-size:1.8rem;line-height:1.2;margin-bottom:.75rem}
+.result-decision{font-size:.82rem;color:var(--accent);background:var(--accent-light);border:1px solid var(--accent-border);border-radius:20px;padding:.35rem 1rem;display:inline-block;line-height:1.5;max-width:90%}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;margin:0 1rem 1rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.75rem .5rem;text-align:center}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--accent);display:block}
+.stat-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.15rem;display:block}
+.chapter{margin:0 1rem 1rem;opacity:0;animation:fadeUp .6s forwards}
+.chapter-age{font-size:.72rem;color:var(--accent);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
+.chapter-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:.6rem;color:var(--ink)}
+.chapter-body{font-size:.92rem;line-height:1.8;color:#2a4442;font-weight:300}
+.chapter-body em{color:var(--accent);font-style:normal;font-weight:500}
+.verdict-card{margin:0 1rem 1rem;background:var(--ink);border-radius:16px;padding:1.5rem}
+.verdict-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#4a7a76;margin-bottom:.75rem}
+.verdict-text{font-family:'DM Serif Display',serif;font-size:1.05rem;line-height:1.7;color:#e8f5f3}
+.share-section{margin:0 1rem 1rem}
+.share-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem}
+#share-card{background:var(--ink);border-radius:16px;padding:1.75rem;position:relative;overflow:hidden}
+#share-card::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(26,122,110,.15)}
+.sc-app{font-family:'DM Serif Display',serif;font-size:.9rem;color:#4a7a76;font-style:italic;margin-bottom:1rem}
+.sc-decision{font-size:.82rem;color:var(--accent2);margin-bottom:.75rem;font-style:italic;line-height:1.5}
+.sc-name{font-family:'DM Serif Display',serif;font-size:1.5rem;color:#e8f5f3;margin-bottom:.25rem}
+.sc-tagline{font-size:.82rem;color:#4a7a76;margin-bottom:1.25rem;line-height:1.5}
+.sc-stats{display:flex;gap:1.5rem}
+.sc-stat span:first-child{font-family:'DM Serif Display',serif;font-size:1.4rem;color:var(--accent2);display:block}
+.sc-stat span:last-child{font-size:.68rem;color:#4a7a76;text-transform:uppercase;letter-spacing:.05em}
+.sc-url{font-size:.7rem;color:#2a4a46;margin-top:1rem;letter-spacing:.04em}
+.share-btns{display:flex;gap:.75rem;margin-top:.75rem}
+.share-btn{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;color:var(--ink);padding:.75rem;font-size:.85rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;transition:all .2s}
+.share-btn:hover{border-color:var(--accent);color:var(--accent)}
+.error-msg{margin:.5rem 1rem;padding:.75rem 1rem;background:#fff3f3;border:1px solid #f5c5c5;border-radius:10px;font-size:.82rem;color:#8a2a2a;line-height:1.5}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="s-intake">
+  <div class="header">
+    <div class="logo">What <em>If?</em></div>
+    <div class="tagline">one decision · a thousand possibilities</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" style="width:20%"></div></div>
+    <div class="step-label">Step 1 of 3 — About you</div>
+  </div>
+  <div class="card">
+    <div class="section-title">Tell us about yourself</div>
+    <div class="section-sub">The more honest you are, the more real your story becomes.</div>
+    <div class="grid2">
+      <div class="field"><label>First name</label><input id="fname" type="text" placeholder="Your name" oninput="chk()"/></div>
+      <div class="field"><label>Age</label><input id="age" type="number" min="13" max="80" placeholder="24" oninput="chk()"/></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Gender</label>
+        <select id="gender" onchange="chk()"><option value="">Select</option><option>Male</option><option>Female</option><option>Non-binary</option><option>Prefer not to say</option></select>
+      </div>
+      <div class="field"><label>Relationship status</label>
+        <select id="rel" onchange="chk()"><option value="">Select</option><option>Single</option><option>In a relationship</option><option>Married</option><option>Divorced</option><option>It's complicated</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Country</label>
+      <select id="location" onchange="chk()">
+        <option value="">Select your country</option>
+        <optgroup label="North America"><option>United States</option><option>Canada</option><option>Mexico</option></optgroup>
+        <optgroup label="Europe"><option>United Kingdom</option><option>Germany</option><option>France</option><option>Spain</option><option>Italy</option><option>Netherlands</option><option>Sweden</option><option>Norway</option><option>Switzerland</option><option>Poland</option><option>Ireland</option></optgroup>
+        <optgroup label="Asia Pacific"><option>Australia</option><option>New Zealand</option><option>Japan</option><option>South Korea</option><option>China</option><option>India</option><option>Singapore</option><option>Philippines</option><option>Indonesia</option><option>Thailand</option></optgroup>
+        <optgroup label="Middle East & Africa"><option>UAE</option><option>Saudi Arabia</option><option>South Africa</option><option>Nigeria</option><option>Kenya</option><option>Egypt</option></optgroup>
+        <optgroup label="Latin America"><option>Brazil</option><option>Argentina</option><option>Colombia</option><option>Chile</option></optgroup>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Children</label>
+        <select id="children" onchange="chk()"><option value="">Select</option><option value="0">No children</option><option value="1">1 child</option><option value="2">2 children</option><option value="3">3 children</option><option value="4">4+ children</option></select>
+      </div>
+      <div class="field"><label>Living situation</label>
+        <select id="living" onchange="chk()"><option value="">Select</option><option>Renting</option><option>Own my home</option><option>Living with family</option><option>Living with partner</option><option>Student housing</option><option>Shared housing</option><option>Homeless / transitional</option></select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Current situation</label>
+        <select id="job" onchange="chk()"><option value="">Select</option><option>Student</option><option>Employed</option><option>Entrepreneur</option><option>Freelancer</option><option>Between jobs</option><option>Other</option></select>
+      </div>
+      <div class="field"><label>Annual income</label>
+        <select id="salary" onchange="chk()"><option value="">Select</option><option value="1">Under $20k</option><option value="2">$20k–$50k</option><option value="3">$50k–$100k</option><option value="4">$100k–$200k</option><option value="5">$200k+</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Net worth</label>
+      <select id="networth" onchange="chk()">
+        <option value="">Select</option>
+        <option value="-3">Deep in debt (over $50k negative)</option>
+        <option value="-2">In debt ($10k–$50k negative)</option>
+        <option value="-1">Slightly negative (under $10k)</option>
+        <option value="0">Around zero / breaking even</option>
+        <option value="1">$1k–$25k</option>
+        <option value="2">$25k–$100k</option>
+        <option value="3">$100k–$500k</option>
+        <option value="4">$500k–$1M</option>
+        <option value="5">$1M+</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn btn-primary inactive" id="btn1" onclick="goSnapshot()">See your life snapshot →</button>
+</div>
+
+<div id="s-snapshot" class="hidden">
+  <div class="snapshot-header">
+    <div class="snapshot-greeting" id="snap-greeting"></div>
+    <div class="snapshot-sub">Here's where you stand — compared to people your age.</div>
+  </div>
+  <div class="snapshot-intro"><p id="snap-intro"></p></div>
+  <div class="stat-block" id="snap-stats"></div>
+  <div class="overall-card">
+    <div class="overall-label">Your life score</div>
+    <div class="overall-score" id="snap-score"></div>
+    <div class="overall-sub">out of 100</div>
+    <div class="overall-msg" id="snap-msg"></div>
+  </div>
+  <button class="btn btn-primary" onclick="goDecision()" style="margin-bottom:.75rem">Now make your decision →</button>
+  <button class="btn btn-ghost" onclick="goBack1()">← Edit my details</button>
+</div>
+
+<div id="s-decision" class="hidden">
+  <div class="header" style="padding-top:1.5rem">
+    <div class="logo">What <em>If?</em></div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" style="width:80%"></div></div>
+    <div class="step-label">Step 3 of 3 — Your crossroads</div>
+  </div>
+  <div class="card">
+    <div class="section-title">What's your crossroads?</div>
+    <div class="section-sub">Describe the decision you're facing — in your own words. Anything goes.</div>
+    <div class="decision-hint">
+      <p><strong>This can be anything.</strong> Career, love, where you live, a relationship, a leap of faith.</p>
+      <div class="examples">
+        <span class="example-chip" onclick="setEx(this)">Leave my job</span>
+        <span class="example-chip" onclick="setEx(this)">End my relationship</span>
+        <span class="example-chip" onclick="setEx(this)">Move abroad</span>
+        <span class="example-chip" onclick="setEx(this)">Start therapy</span>
+        <span class="example-chip" onclick="setEx(this)">Cut off a family member</span>
+        <span class="example-chip" onclick="setEx(this)">Go back to school</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Your decision</label>
+      <textarea id="decision" rows="5" placeholder="e.g. I'm thinking about leaving my stable job to start my own business, even though I have no savings and my family thinks it's a mistake..." oninput="chkD()"></textarea>
+      <div class="char-count" id="char-count">0 / 300</div>
+    </div>
+  </div>
+  <button class="btn btn-primary inactive" id="btn3" onclick="runSim()" style="margin-bottom:.75rem">See my other life →</button>
+  <button class="btn btn-ghost" onclick="goBack2()">← Back</button>
+</div>
+
+<div id="s-loading" class="hidden">
+  <div class="loading-screen">
+    <div class="loading-title" id="ltitle">What if...</div>
+    <div class="loading-sub" id="lsub">Your decision is rippling forward through time.</div>
+    <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+  </div>
+</div>
+
+<div id="s-result" class="hidden">
+  <div class="result-header">
+    <div class="result-name" id="r-name"></div>
+    <div class="result-title">Your other life</div>
+    <div class="result-decision" id="r-decision"></div>
+  </div>
+  <div class="stats-row" id="r-stats"></div>
+  <div id="r-chapters"></div>
+  <div class="verdict-card">
+    <div class="verdict-label">The bigger picture</div>
+    <div class="verdict-text" id="r-verdict"></div>
+  </div>
+  <div class="share-section">
+    <div class="share-title">Share your story</div>
+    <div id="share-card">
+      <div class="sc-app">What If?</div>
+      <div class="sc-decision" id="sc-decision"></div>
+      <div class="sc-name" id="sc-name"></div>
+      <div class="sc-tagline" id="sc-tagline"></div>
+      <div class="sc-stats" id="sc-stats"></div>
+      <div class="sc-url">whatifripple.vercel.app</div>
+    </div>
+    <div class="share-btns">
+      <button class="share-btn" onclick="downloadCard()">↓ Save card</button>
+      <button class="share-btn" onclick="copyLink()">⎘ Copy link</button>
+    </div>
+  </div>
+  <br>
+  <button class="btn btn-ghost" onclick="reset()">Try a different decision</button>
+</div>
+
+</div>
+
+<script>
+var API_KEY = 'REPLACE_WITH_ENV_KEY';
+var profile = {};
+var FIELDS = ['fname','age','gender','rel','location','children','living','job','salary','networth'];
+
+function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+
+function chk(){
+  var ok=true;
+  for(var i=0;i<FIELDS.length;i++){if(!v(FIELDS[i])){ok=false;break;}}
+  var btn=document.getElementById('btn1');
+  if(ok){btn.classList.remove('inactive');}else{btn.classList.add('inactive');}
+}
+
+function chkD(){
+  var val=document.getElementById('decision').value.trim();
+  var len=val.length;
+  document.getElementById('char-count').textContent=len+' / 300';
+  if(len>300){document.getElementById('decision').value=val.slice(0,300);return;}
+  var btn=document.getElementById('btn3');
+  if(len>=10){btn.classList.remove('inactive');}else{btn.classList.add('inactive');}
+}
+
+function setEx(el){document.getElementById('decision').value=el.textContent;chkD();}
+
+function goSnapshot(){
+  if(document.getElementById('btn1').classList.contains('inactive'))return;
+  profile={
+    name:v('fname'),age:parseInt(v('age')),gender:v('gender'),rel:v('rel'),
+    location:v('location'),children:parseInt(v('children')),living:v('living'),
+    job:v('job'),salary:parseInt(v('salary')),networth:parseInt(v('networth'))
+  };
+  buildSnapshot();
+  show('s-intake',false);show('s-snapshot',true);
+}
+
+function buildSnapshot(){
+  var p=profile;
+  document.getElementById('snap-greeting').textContent='Here you are, '+p.name+'.';
+  var stats=[];
+  var nwMap={'-3':-75000,'-2':-25000,'-1':-4000,'0':0,'1':10000,'2':55000,'3':200000,'4':700000,'5':2000000};
+  var nwMed={18:0,25:10000,30:35000,35:76000,40:135000,45:200000,50:280000,55:370000,60:430000,70:500000};
+  var nwVal=nwMap[String(p.networth)]||0;
+  var keys=Object.keys(nwMed);
+  var ageKey=keys.reduce(function(a,b){return Math.abs(b-p.age)<Math.abs(a-p.age)?b:a;});
+  var med=nwMed[ageKey]||1;
+  var nwPct;
+  if(nwVal<=0)nwPct=15;
+  else if(nwVal<med)nwPct=Math.round(30+(nwVal/med)*20);
+  else nwPct=Math.min(95,Math.round(50+(nwVal-med)/(med*4)*40));
+  stats.push({label:'Net worth',pct:nwPct,msg:nwPct<30?'You\'re in the early stages of building wealth — and so was almost everyone worth knowing at your age. The starting point is rarely the finish line.':nwPct<55?'You\'re right around where most people your age are. That\'s a real foundation — and you\'re here asking questions most people aren\'t.':'You\'re ahead of most people your age financially. That\'s not luck — it\'s decisions you\'ve already made right.'});
+  var incMap={1:12,2:35,3:62,4:83,5:96};
+  var incPct=incMap[p.salary]||35;
+  stats.push({label:'Income',pct:incPct,msg:incPct<30?'Your income puts you earlier in the earning curve — the biggest jumps are still ahead. Most high earners didn\'t start there.':incPct<60?'You\'re earning in a solid range. What matters more than where you start is the direction you\'re moving.':'Your income puts you well ahead of most people your age. You\'ve clearly put in the work.'});
+  var mba=p.age<25?12:p.age<30?28:p.age<35?52:p.age<40?65:72;
+  var relPct,relMsg;
+  if(p.rel==='Married'){relPct=Math.min(92,mba+10);relMsg='You\'re among the '+relPct+'% of people your age who\'ve made that commitment. That\'s a foundation most people are still searching for.';}
+  else if(p.rel==='In a relationship'){relPct=Math.min(85,mba+5);relMsg='You\'re connected — and '+(100-relPct)+'% of people your age are still looking for what you have.';}
+  else if(p.rel==='Single'||p.rel==="It's complicated"){relPct=100-mba;relMsg='About '+relPct+'% of people your age are exactly where you are. Being unattached means your next chapter is entirely unwritten — that\'s a real kind of freedom.';}
+  else{relPct=Math.max(20,mba-15);relMsg='Life after a relationship ends is something '+relPct+'% of people your age have navigated. You\'re not behind — you\'re further along in understanding what you actually want.';}
+  stats.push({label:'Relationship',pct:relPct,msg:relMsg});
+  var oba=p.age<25?5:p.age<30?18:p.age<35?40:p.age<40?55:p.age<50?65:72;
+  var hPct,hMsg;
+  if(p.living==='Own my home'){hPct=Math.min(95,oba+12);hMsg='Owning puts you ahead of '+(100-hPct)+'% of people your age. That took real decisions to get there.';}
+  else if(p.living==='Renting'){hPct=55;hMsg='Renting is the reality for most people your age — you\'re in good company. It keeps you mobile and flexible.';}
+  else if(p.living==='Living with family'){hPct=p.age<25?70:p.age<30?40:25;hMsg=hPct+'% of people your age live with family at some point. Lower costs, more runway. Many of the best comebacks started exactly here.';}
+  else{hPct=45;hMsg='Your living situation is shared by millions building toward something bigger. Where you sleep right now doesn\'t define where you\'ll land.';}
+  stats.push({label:'Housing',pct:hPct,msg:hMsg});
+  var overall=Math.round((nwPct+incPct+relPct+hPct)/4);
+  var msgs=['You\'re earlier in the journey than you think — and earlier means more time, more room, more possibility than most people ever get.','You\'re right in the middle of a story that hasn\'t finished. Most chapters that matter start exactly here.','You\'ve quietly built more than you give yourself credit for. The question now is what you do with it.','You\'re ahead of the curve in ways that will compound. The best is genuinely still ahead.'];
+  document.getElementById('snap-intro').textContent="Based on your age, income, and life situation — here's how you compare to people at the same stage. This is your starting point, not your destination.";
+  var block=document.getElementById('snap-stats');
+  block.innerHTML='';
+  stats.forEach(function(s,i){
+    var div=document.createElement('div');
+    div.className='stat-item';div.style.animationDelay=i*.15+'s';
+    div.innerHTML='<div class="stat-row"><span class="stat-label">'+s.label+'</span><span class="stat-pct">Top '+Math.max(3,100-s.pct+1)+'%</span></div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:0%" data-pct="'+s.pct+'"></div></div><div class="stat-message">'+s.msg+'</div>';
+    block.appendChild(div);
+  });
+  setTimeout(function(){document.querySelectorAll('.stat-bar-fill').forEach(function(el){el.style.width=el.dataset.pct+'%';});},300);
+  document.getElementById('snap-score').textContent=overall;
+  document.getElementById('snap-msg').textContent=msgs[overall<35?0:overall<55?1:overall<75?2:3];
+}
+
+function goDecision(){show('s-snapshot',false);show('s-decision',true);}
+function goBack1(){show('s-snapshot',false);show('s-intake',true);}
+function goBack2(){show('s-decision',false);show('s-snapshot',true);}
+
+function runSim(){
+  if(document.getElementById('btn3').classList.contains('inactive'))return;
+  profile.decision=document.getElementById('decision').value.trim();
+  show('s-decision',false);show('s-loading',true);
+  var lines=[
+    ["What if...","Your decision is rippling forward through time."],
+    ["What if you had...","Some doors are opening. Others are closing. Both are okay."],
+    ["What if this changes everything...","Every path leads somewhere. This one is yours."],
+    ["What if it all works out...","What you chose is shaping everything that follows."]
+  ];
+  var i=0;
+  var iv=setInterval(function(){
+    var l=lines[i%lines.length];
+    document.getElementById('ltitle').textContent=l[0];
+    document.getElementById('lsub').textContent=l[1];
+    i++;
+  },1100);
+  generateStory().then(function(story){
+    clearInterval(iv);
+    buildResult(story);
+  }).catch(function(err){
+    clearInterval(iv);
+    show('s-loading',false);show('s-decision',true);
+    var existing=document.getElementById('api-error');
+    if(existing)existing.remove();
+    var errDiv=document.createElement('div');
+    errDiv.id='api-error';
+    errDiv.className='error-msg';
+    errDiv.style.marginTop='.5rem';
+    errDiv.textContent='Something went wrong generating your story. Check your API key and try again.';
+    document.getElementById('btn3').insertAdjacentElement('afterend',errDiv);
+    setTimeout(function(){if(errDiv.parentNode)errDiv.remove();},4000);
+  });
+}
+
+async function generateStory(){
+  var p=profile;
+  var prompt='You are writing a deeply personal, emotionally resonant life simulation for someone who has shared their real life situation and a decision they are considering.\n\nHere is their profile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n\nTheir decision: "'+p.decision+'"\n\nWrite their hypothetical life story if they go through with this decision. The story must:\n1. Directly reference their specific decision and personal situation throughout\n2. Be told in 4 chapters spanning ages '+(p.age+1)+', '+(p.age+3)+', '+(p.age+6)+', and '+(p.age+12)+'\n3. Each chapter needs a title and 3-4 sentences of narrative\n4. End on an encouraging note — the core message is "you have options, you are not stuck"\n5. Use italics sparingly for emotional emphasis with <em> tags\n6. Feel personal, warm, and literary — not generic\n\nRespond ONLY with valid JSON in this exact format, no markdown, no backticks:\n{"chapters":[{"yrs":1,"title":"Chapter title","body":"Chapter text with optional <em>emphasis</em>"},{"yrs":3,"title":"Chapter title","body":"Chapter text"},{"yrs":6,"title":"Chapter title","body":"Chapter text"},{"yrs":12,"title":"Chapter title","body":"Chapter text"}],"verdict":"One powerful closing sentence about their journey","stats":{"finance":65,"happiness":72,"health":68,"relationships":70}}';
+
+  var response=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key':API_KEY,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body:JSON.stringify({
+      model:'claude-sonnet-4-20250514',
+      max_tokens:1500,
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+
+  if(!response.ok)throw new Error('API error: '+response.status);
+  var data=await response.json();
+  var text=data.content[0].text.replace(/```json|```/g,'').trim();
+  return JSON.parse(text);
+}
+
+function buildResult(story){
+  var p=profile;
+  var s=story.stats;
+  var overall=Math.round((s.finance+s.happiness+s.health+s.relationships)/4);
+  var rng=seeded(p.name.split('').reduce(function(a,c){return a+c.charCodeAt(0);},0)*p.age);
+
+  show('s-loading',false);show('s-result',true);
+  document.getElementById('r-name').textContent=p.name+"'s story";
+  var short=p.decision.length>60?p.decision.slice(0,57)+'...':p.decision;
+  document.getElementById('r-decision').textContent='"'+short+'"';
+  document.getElementById('r-stats').innerHTML=[
+    {n:p.age+Math.round(7+rng()*13),l:'Peak age'},
+    {n:s.finance+'%',l:'Finance'},
+    {n:s.happiness+'%',l:'Fulfilment'},
+    {n:overall+'%',l:'Life score'}
+  ].map(function(st){return '<div class="stat"><span class="stat-num">'+st.n+'</span><span class="stat-lbl">'+st.l+'</span></div>';}).join('');
+
+  var container=document.getElementById('r-chapters');
+  container.innerHTML='';
+  story.chapters.forEach(function(ch,i){
+    var d=document.createElement('div');
+    d.className='chapter card';
+    d.style.animationDelay=i*.3+'s';
+    d.innerHTML='<div class="chapter-age">Age '+(p.age+ch.yrs)+'</div><div class="chapter-title">'+ch.title+'</div><div class="chapter-body">'+ch.body+'</div>';
+    container.appendChild(d);
+  });
+
+  document.getElementById('r-verdict').textContent=story.verdict;
+  document.getElementById('sc-decision').textContent='"'+short+'"';
+  document.getElementById('sc-name').textContent=p.name+"'s other life";
+  document.getElementById('sc-tagline').textContent=story.verdict.slice(0,100)+'...';
+  document.getElementById('sc-stats').innerHTML=[
+    {v:s.finance+'%',l:'Finance'},
+    {v:s.happiness+'%',l:'Fulfilment'},
+    {v:overall+'%',l:'Life score'}
+  ].map(function(st){return '<div class="sc-stat"><span>'+st.v+'</span><span>'+st.l+'</span></div>';}).join('');
+}
+
+function seeded(seed){var s=seed%2147483647;if(s<=0)s+=2147483646;return function(){s=s*16807%2147483647;return(s-1)/2147483646;};}
+function show(id,v){document.getElementById(id).classList.toggle('hidden',!v);}
+
+function downloadCard(){
+  var msg=document.createElement('div');
+  msg.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0d1f1e;color:#e8f5f3;padding:.65rem 1.25rem;border-radius:20px;font-size:.82rem;z-index:999;font-family:DM Sans,sans-serif;white-space:nowrap';
+  msg.textContent='Screenshot the card above to share ↑';
+  document.body.appendChild(msg);
+  setTimeout(function(){msg.remove();},2800);
+}
+
+function copyLink(){
+  navigator.clipboard.writeText('https://whatifripple.vercel.app').catch(function(){});
+  var btn=event.currentTarget;var orig=btn.textContent;
+  btn.textContent='✓ Copied!';
+  setTimeout(function(){btn.textContent=orig;},1800);
+}
+
+function reset(){
+  ['s-result','s-decision','s-snapshot','s-loading'].forEach(function(id){show(id,false);});
+  show('s-intake',true);
+  document.getElementById('decision').value='';
+  document.getElementById('char-count').textContent='0 / 300';
+  document.getElementById('btn3').classList.add('inactive');
+  document.getElementById('btn1').classList.add('inactive');
+  FIELDS.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+}
+</script>
+</body>
+</html>
