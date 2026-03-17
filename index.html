@@ -192,6 +192,18 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     <div class="overall-sub">out of 100</div>
     <div class="overall-msg" id="snap-msg"></div>
   </div>
+  <div class="card hidden" id="life-now-card">
+    <div class="section-title">Your life right now</div>
+    <div class="section-sub" id="life-now-loading">
+      Reading between the lines…
+      <span class="dots" style="display:inline-flex;gap:.35rem;margin-left:.35rem;vertical-align:middle;transform:scale(.7);transform-origin:left center">
+        <span class="dot" style="width:6px;height:6px"></span>
+        <span class="dot" style="width:6px;height:6px"></span>
+        <span class="dot" style="width:6px;height:6px"></span>
+      </span>
+    </div>
+    <div class="chapter-body" id="life-now-text" style="margin-top:.25rem"></div>
+  </div>
   <button class="btn btn-primary" onclick="goDecision()" style="margin-bottom:.75rem">Now make your decision →</button>
   <button class="btn btn-ghost" onclick="goBack1()">← Edit my details</button>
 </div>
@@ -351,6 +363,38 @@ function buildSnapshot(){
   setTimeout(function(){document.querySelectorAll('.stat-bar-fill').forEach(function(el){el.style.width=el.dataset.pct+'%';});},300);
   document.getElementById('snap-score').textContent=overall;
   document.getElementById('snap-msg').textContent=msgs[overall<35?0:overall<55?1:overall<75?2:3];
+  buildLifeNow(p);
+}
+
+function buildLifeNow(p){
+  var card=document.getElementById('life-now-card');
+  var loading=document.getElementById('life-now-loading');
+  var textEl=document.getElementById('life-now-text');
+  if(!card||!loading||!textEl)return;
+
+  card.classList.remove('hidden');
+  loading.classList.remove('hidden');
+  textEl.textContent='';
+
+  var extra=p.extra?(''+p.extra).trim():'';
+  var prompt='You are a warm, emotionally intelligent narrator.\n\nGiven this person\'s profile, write a short "Your life right now" summary in 3-4 sentences. It must acknowledge their specific situation and reflect any important details mentioned under "Anything else we should know?" if provided. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
+
+  fetch('/api/story',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  }).then(function(r){
+    if(!r.ok)throw new Error('API error: '+r.status);
+    return r.json();
+  }).then(function(data){
+    var t=((data&&data.content&&data.content[0]&&data.content[0].text)||'').replace(/```/g,'').trim();
+    if(!t)throw new Error('Empty summary');
+    loading.classList.add('hidden');
+    textEl.textContent=t;
+  }).catch(function(){
+    loading.classList.add('hidden');
+    textEl.textContent='(Couldn’t generate this summary right now.)';
+  });
 }
 
 function goDecision(){show('s-snapshot',false);show('s-decision',true);}
