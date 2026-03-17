@@ -453,9 +453,10 @@ function buildSnapshot(){
   stats.push({label:'Income',pct:incPct,msg:incPct<30?'Your income puts you earlier in the earning curve — the biggest jumps are still ahead. Most high earners didn\'t start there.':incPct<60?'You\'re earning in a solid range. What matters more than where you start is the direction you\'re moving.':'Your income puts you well ahead of most people your age. You\'ve clearly put in the work.'});
   var mba=p.age<25?12:p.age<30?28:p.age<35?52:p.age<40?65:72;
   var relPct,relMsg;
-  if(p.rel==='Married'){relPct=Math.min(92,mba+10);relMsg='You\'re among the '+relPct+'% of people your age who\'ve made that commitment. That\'s a foundation most people are still searching for.';}
-  else if(p.rel==='In a relationship'){relPct=Math.max(60,Math.min(85,mba+40));relMsg='You\'re connected — and '+(100-relPct)+'% of people your age are still looking for what you have.';}
+  if(p.rel==='In a relationship'){relPct=68;relMsg='You\'re connected — and '+(100-relPct)+'% of people your age are still looking for what you have.';}
+  else if(p.rel==='Married'){relPct=78;relMsg='You\'re among the '+relPct+'% of people your age who\'ve made that commitment. That\'s a foundation most people are still searching for.';}
   else if(p.rel==='Single'||p.rel==="It's complicated"){relPct=100-mba;relMsg='About '+relPct+'% of people your age are exactly where you are. Being unattached means your next chapter is entirely unwritten — that\'s a real kind of freedom.';}
+  else if(p.rel==='Divorced'){relPct=45;relMsg='Life after a relationship ends is something '+relPct+'% of people your age have navigated. You\'re not behind — you\'re further along in understanding what you actually want.';}
   else{relPct=Math.max(20,mba-15);relMsg='Life after a relationship ends is something '+relPct+'% of people your age have navigated. You\'re not behind — you\'re further along in understanding what you actually want.';}
   stats.push({label:'Relationship',pct:relPct,msg:relMsg});
   var oba=p.age<25?5:p.age<30?18:p.age<35?40:p.age<40?55:p.age<50?65:72;
@@ -465,7 +466,7 @@ function buildSnapshot(){
   else if(p.living==='Living with family'){hPct=p.age<25?70:p.age<30?40:25;hMsg=hPct+'% of people your age live with family at some point. Lower costs, more runway. Many of the best comebacks started exactly here.';}
   else{hPct=45;hMsg='Your living situation is shared by millions building toward something bigger. Where you sleep right now doesn\'t define where you\'ll land.';}
   stats.push({label:'Housing',pct:hPct,msg:hMsg});
-  var overall=Math.round((careerPct+nwPct+incPct+relPct+hPct)/5);
+  var overall=Math.round((nwPct+incPct+relPct+hPct)/4);
   var msgs=['You\'re earlier in the journey than you think — and earlier means more time, more room, more possibility than most people ever get.','You\'re right in the middle of a story that hasn\'t finished. Most chapters that matter start exactly here.','You\'ve quietly built more than you give yourself credit for. The question now is what you do with it.','You\'re ahead of the curve in ways that will compound. The best is genuinely still ahead.'];
   document.getElementById('snap-intro').textContent="Based on your age, income, and life situation — here's how you compare to people at the same stage. This is your starting point, not your destination.";
   var block=document.getElementById('snap-stats');
@@ -503,9 +504,10 @@ function deterministicStoryStats(p){
 
   var mba=p.age<25?12:p.age<30?28:p.age<35?52:p.age<40?65:72;
   var relPct;
-  if(p.rel==='Married')relPct=Math.min(92,mba+10);
-  else if(p.rel==='In a relationship')relPct=Math.max(60,Math.min(85,mba+40));
+  if(p.rel==='In a relationship')relPct=68;
+  else if(p.rel==='Married')relPct=78;
   else if(p.rel==='Single'||p.rel==="It's complicated")relPct=100-mba;
+  else if(p.rel==='Divorced')relPct=45;
   else relPct=Math.max(20,mba-15);
 
   var oba=p.age<25?5:p.age<30?18:p.age<35?40:p.age<40?55:p.age<50?65:72;
@@ -517,7 +519,7 @@ function deterministicStoryStats(p){
 
   var finance=Math.round((nwPct+incPct)/2);
   var happiness=Math.max(20,Math.min(95,Math.round((careerPct+relPct+hPct)/3)));
-  var overall=Math.round((careerPct+nwPct+incPct+relPct+hPct)/5);
+  var overall=Math.round((nwPct+incPct+relPct+hPct)/4);
 
   return {finance:finance,happiness:happiness,overall:overall};
 }
@@ -533,7 +535,7 @@ function buildLifeNow(p){
   textEl.textContent='';
 
   var extra=p.extra?(''+p.extra).trim():'';
-  var prompt='You are a warm, emotionally intelligent narrator.\n\nWrite exactly 3 short punchy sentences, maximum 60 words total. It must acknowledge their specific situation and reflect any important details mentioned under "Anything else we should know?" if provided. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
+  var prompt='You are a warm, emotionally intelligent narrator.\n\nWrite exactly 3 short punchy sentences, maximum 60 words total. It must only describe and reflect the person\'s situation (including any important details mentioned under "Anything else we should know?" if provided). Do NOT give advice, do NOT suggest actions, and do NOT tell them what they should do. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
 
   fetch('/api/story',{
     method:'POST',
