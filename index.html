@@ -394,6 +394,8 @@ var API_KEY = 'REPLACE_WITH_ENV_KEY';
 var profile = {};
 var FIELDS = ['fname','age','gender','rel','location','children','living','job','salary','networth'];
 
+function ordinal(n){var s=['th','st','nd','rd'];var v=n%100;return n+(s[(v-20)%10]||s[v]||s[0])+' percentile';}
+
 function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
 
 function chk(){
@@ -474,7 +476,7 @@ function buildSnapshot(){
   stats.forEach(function(s,i){
     var div=document.createElement('div');
     div.className='stat-item';div.style.animationDelay=i*.15+'s';
-    div.innerHTML='<div class="stat-row"><span class="stat-label">'+s.label+'</span><span class="stat-pct">Top '+Math.max(3,100-s.pct+1)+'%</span></div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:0%" data-pct="'+s.pct+'"></div></div><div class="stat-message">'+s.msg+'</div>';
+    div.innerHTML='<div class="stat-row"><span class="stat-label">'+s.label+'</span><span class="stat-pct">'+ordinal(s.pct)+'</span></div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:0%" data-pct="'+s.pct+'"></div></div><div class="stat-message">'+s.msg+'</div>';
     block.appendChild(div);
   });
   setTimeout(function(){document.querySelectorAll('.stat-bar-fill').forEach(function(el){el.style.width=el.dataset.pct+'%';});},300);
@@ -535,7 +537,7 @@ function buildLifeNow(p){
   textEl.textContent='';
 
   var extra=p.extra?(''+p.extra).trim():'';
-  var prompt='You are a warm, emotionally intelligent narrator.\n\nWrite exactly 3 short punchy sentences, maximum 60 words total. It must only describe and reflect the person\'s situation (including any important details mentioned under "Anything else we should know?" if provided). Do NOT give advice, do NOT suggest actions, and do NOT tell them what they should do. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
+ var prompt='You are a warm, emotionally intelligent narrator.\n\nSTRICT RULE: Write ONLY 2 sentences. Maximum 30 words total. No exceptions. It must only describe and reflect the person\'s situation (including any important details mentioned under "Anything else we should know?" if provided). Do NOT give advice, do NOT suggest actions, and do NOT tell them what they should do. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
 
   fetch('/api/story',{
     method:'POST',
