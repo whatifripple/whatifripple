@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What If?</title>
+<title>One Day</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -371,12 +371,12 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
   <div class="share-section">
     <div class="share-title">Share your story</div>
     <div id="share-card">
-      <div class="sc-app">What If?</div>
+      <div class="sc-app">One Day</div>
       <div class="sc-decision" id="sc-decision"></div>
       <div class="sc-name" id="sc-name"></div>
       <div class="sc-tagline" id="sc-tagline"></div>
       <div class="sc-stats" id="sc-stats"></div>
-      <div class="sc-url">whatifripple.vercel.app</div>
+      <div class="sc-url">onedayapp.vercel.app</div>
     </div>
     <div class="share-btns">
       <button class="share-btn" onclick="downloadCard()">↓ Save card</button>
@@ -612,7 +612,7 @@ function downloadCard(){
 }
 
 function copyLink(){
-  navigator.clipboard.writeText('https://whatifripple.vercel.app').catch(function(){});
+  navigator.clipboard.writeText('https://onedayapp.vercel.app').catch(function(){});
   var btn=event.currentTarget;var orig=btn.textContent;
   btn.textContent='✓ Copied!';
   setTimeout(function(){btn.textContent=orig;},1800);
