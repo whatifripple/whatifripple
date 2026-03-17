@@ -453,7 +453,7 @@ function buildSnapshot(){
   else nwPct=Math.min(95,Math.round(50+(nwVal-med)/(med*4)*40));
   stats.push({label:'Net worth',pct:nwPct,msg:nwPct<30?'You\'re in the early stages of building wealth — and so was almost everyone worth knowing at your age. The starting point is rarely the finish line.':nwPct<55?'You\'re right around where most people your age are. That\'s a real foundation — and you\'re here asking questions most people aren\'t.':'You\'re ahead of most people your age financially. That\'s not luck — it\'s decisions you\'ve already made right.'});
   stats.push({label:'Income',pct:incPct,msg:incPct<30?'Your income puts you earlier in the earning curve — the biggest jumps are still ahead. Most high earners didn\'t start there.':incPct<60?'You\'re earning in a solid range. What matters more than where you start is the direction you\'re moving.':'Your income puts you well ahead of most people your age. You\'ve clearly put in the work.'});
-  var mba=p.age<25?12:p.age<30?28:p.age<35?52:p.age<40?65:72;
+  var mba=p.age<25?30:p.age<30?45:p.age<35?52:p.age<40?65:72;
   var relPct,relMsg;
   if(p.rel==='In a relationship'){relPct=68;relMsg='You\'re connected — and '+(100-relPct)+'% of people your age are still looking for what you have.';}
   else if(p.rel==='Married'){relPct=78;relMsg='You\'re among the '+relPct+'% of people your age who\'ve made that commitment. That\'s a foundation most people are still searching for.';}
@@ -504,7 +504,7 @@ function deterministicStoryStats(p){
   else if(nwVal<med)nwPct=Math.round(30+(nwVal/med)*20);
   else nwPct=Math.min(95,Math.round(50+(nwVal-med)/(med*4)*40));
 
-  var mba=p.age<25?12:p.age<30?28:p.age<35?52:p.age<40?65:72;
+  var mba=p.age<25?30:p.age<30?45:p.age<35?52:p.age<40?65:72;
   var relPct;
   if(p.rel==='In a relationship')relPct=68;
   else if(p.rel==='Married')relPct=78;
@@ -550,7 +550,8 @@ function buildLifeNow(p){
     var t=((data&&data.content&&data.content[0]&&data.content[0].text)||'').replace(/```/g,'').trim();
     if(!t)throw new Error('Empty summary');
     loading.classList.add('hidden');
-    textEl.textContent=t;
+    var sentences=t.match(/[^.!?]+[.!?]+/g)||[t];
+    textEl.textContent=sentences.slice(0,2).join(' ').trim();
   }).catch(function(){
     loading.classList.add('hidden');
     textEl.textContent='(Couldn’t generate this summary right now.)';
