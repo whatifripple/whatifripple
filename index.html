@@ -318,7 +318,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
 
 <div id="s-decision" class="hidden">
   <div class="header" style="padding-top:1.5rem">
-    <div class="logo">What <em>If?</em></div>
+    <div class="logo">One Day</div>
   </div>
   <div class="progress-wrap">
     <div class="progress-track"><div class="progress-fill" style="width:80%"></div></div>
@@ -330,17 +330,17 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     <div class="decision-hint">
       <p><strong>This can be anything.</strong> Career, love, where you live, a relationship, a leap of faith.</p>
       <div class="examples">
-        <span class="example-chip" onclick="setEx(this)">Leave my job</span>
-        <span class="example-chip" onclick="setEx(this)">End my relationship</span>
-        <span class="example-chip" onclick="setEx(this)">Move abroad</span>
-        <span class="example-chip" onclick="setEx(this)">Start therapy</span>
-        <span class="example-chip" onclick="setEx(this)">Cut off a family member</span>
+        <span class="example-chip" onclick="setEx(this)">Change careers</span>
+        <span class="example-chip" onclick="setEx(this)">Move to a new city</span>
         <span class="example-chip" onclick="setEx(this)">Go back to school</span>
+        <span class="example-chip" onclick="setEx(this)">Start a business</span>
+        <span class="example-chip" onclick="setEx(this)">End a relationship</span>
+        <span class="example-chip" onclick="setEx(this)">Take a leap of faith</span>
       </div>
     </div>
     <div class="field">
       <label>Your decision</label>
-      <textarea id="decision" rows="5" placeholder="e.g. I'm thinking about leaving my stable job to start my own business, even though I have no savings and my family thinks it's a mistake..." oninput="chkD()"></textarea>
+      <textarea id="decision" rows="5" placeholder="What decision have you been contemplating?" oninput="chkD()"></textarea>
       <div class="char-count" id="char-count">0 / 300</div>
     </div>
   </div>
