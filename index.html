@@ -120,7 +120,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     <div class="section-sub">The more honest you are, the more real your story becomes.</div>
     <div class="grid2">
       <div class="field"><label>First name</label><input id="fname" type="text" placeholder="Your name" oninput="chk()"/></div>
-      <div class="field"><label>Age</label><input id="age" type="number" min="13" max="80" placeholder="24" oninput="chk()"/></div>
+      <div class="field"><label>Age</label><input id="age" type="number" min="13" max="80" oninput="chk()"/></div>
     </div>
     <div class="grid2">
       <div class="field"><label>Gender</label>
@@ -173,7 +173,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     </div>
     <div class="field">
       <label>Anything else we should know?</label>
-      <textarea id="extra" rows="4" maxlength="500" placeholder="e.g. I have a girlfriend but we're not official, I'm in my last semester of university, I'm dealing with a health issue..."></textarea>
+      <textarea id="extra" rows="4" maxlength="500" placeholder="Add any extra context about your life that might be relevant..."></textarea>
     </div>
   </div>
   <button class="btn btn-primary inactive" id="btn1" onclick="goSnapshot()">See your life snapshot →</button>
