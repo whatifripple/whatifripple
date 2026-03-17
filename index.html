@@ -292,6 +292,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     <div class="snapshot-greeting" id="snap-greeting"></div>
     <div class="snapshot-sub">Here's where you stand — compared to people your age.</div>
   </div>
+  <div class="snapshot-intro"><p id="snap-intro"></p></div>
   <div class="card hidden" id="life-now-card">
     <div class="section-title">Your life right now</div>
     <div class="section-sub" id="life-now-loading">
@@ -304,10 +305,9 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     </div>
     <div class="chapter-body" id="life-now-text" style="margin-top:.25rem"></div>
   </div>
-  <div class="snapshot-intro"><p id="snap-intro"></p></div>
   <div class="stat-block" id="snap-stats"></div>
   <div class="overall-card">
-    <div class="overall-label">Your life score</div>
+    <div class="overall-label">Your story score</div>
     <div class="overall-score" id="snap-score"></div>
     <div class="overall-sub">out of 100</div>
     <div class="overall-msg" id="snap-msg"></div>
@@ -435,9 +435,9 @@ function buildSnapshot(){
   var careerBase=careerBaseMap[p.job]||52;
   var careerPct=Math.max(10,Math.min(95,Math.round(careerBase+(incPct-50)*0.3)));
   var careerMsg;
-  if(careerPct<35)careerMsg='Career-wise, you\'re in a building season — and that\'s not a flaw, it\'s a phase. Being '+(p.job||'where you are right now')+' can be the exact runway that lets you reset, learn, and choose a direction that actually fits you.';
-  else if(careerPct<65)careerMsg='Career-wise, you\'re in a solid place with real momentum to work with. As '+(p.job||'someone navigating a busy season')+', small focused moves now can compound into bigger options faster than you expect.';
-  else careerMsg='Career-wise, you\'re in a strong position for your stage of life — and you\'ve earned that. If you\'re '+(p.job||'on your current path')+', you have leverage: you can keep building, or you can pivot with intention instead of panic.';
+  if(careerPct<35)careerMsg='You\'re in a career reset season — and that\'s a real kind of progress. Where you are now can be your runway.';
+  else if(careerPct<65)careerMsg='You\'ve got steady career momentum. Small moves now can open bigger options soon.';
+  else careerMsg='You\'re in a strong career position. You can build confidently — or pivot on your terms.';
   stats.push({label:'Career',pct:careerPct,msg:careerMsg});
   var nwMap={'-3':-75000,'-2':-25000,'-1':-4000,'0':0,'1':10000,'2':55000,'3':200000,'4':700000,'5':2000000};
   var nwMed={18:0,25:10000,30:35000,35:76000,40:135000,45:200000,50:280000,55:370000,60:430000,70:500000};
@@ -493,7 +493,7 @@ function buildLifeNow(p){
   textEl.textContent='';
 
   var extra=p.extra?(''+p.extra).trim():'';
-  var prompt='You are a warm, emotionally intelligent narrator.\n\nGiven this person\'s profile, write a short "Your life right now" summary in 3-4 sentences. It must acknowledge their specific situation and reflect any important details mentioned under "Anything else we should know?" if provided. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
+  var prompt='You are a warm, emotionally intelligent narrator.\n\nGiven this person\'s profile, write a short "Your life right now" summary in exactly 3 sentences (no more, no less). It must acknowledge their specific situation and reflect any important details mentioned under "Anything else we should know?" if provided. Be grounded and non-judgmental. No bullet points. No headings. Output ONLY the summary text.\n\nProfile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+(extra||'(none)');
 
   fetch('/api/story',{
     method:'POST',
