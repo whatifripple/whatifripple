@@ -622,8 +622,11 @@ async function generateStory(){
 
 function buildResult(story){
   var p=profile;
-  var s=deterministicStoryStats(p);
-  var overall=s.overall;
+  var sDet=deterministicStoryStats(p);
+  var s=(story&&story.stats&&typeof story.stats.finance==='number'&&typeof story.stats.happiness==='number'&&typeof story.stats.overall==='number')
+    ? story.stats
+    : sDet;
+  var overall=typeof s.overall==='number'?s.overall:sDet.overall;
   var rng=seeded(p.name.split('').reduce(function(a,c){return a+c.charCodeAt(0);},0)*p.age);
 
   show('s-loading',false);show('s-result',true);
