@@ -664,7 +664,7 @@ function buildResult(story){
     {n:p.age+Math.round(7+rng()*13),l:'Peak age'},
     {n:s.finance+'%',l:'Finance'},
     {n:s.happiness+'%',l:'Fulfilment'},
-    {n:overall+'%',l:'Life score'}
+    {n:overall+'%',l:'Overall score'}
   ].map(function(st){return '<div class="stat"><span class="stat-num">'+st.n+'</span><span class="stat-lbl">'+st.l+'</span></div>';}).join('');
 
   var container=document.getElementById('r-chapters');
@@ -684,7 +684,7 @@ function buildResult(story){
   document.getElementById('sc-stats').innerHTML=[
     {v:s.finance+'%',l:'Finance'},
     {v:s.happiness+'%',l:'Fulfilment'},
-    {v:overall+'%',l:'Life score'}
+    {v:overall+'%',l:'Overall score'}
   ].map(function(st){return '<div class="sc-stat"><span>'+st.v+'</span><span>'+st.l+'</span></div>';}).join('');
 }
 
