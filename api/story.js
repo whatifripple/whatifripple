@@ -6,6 +6,9 @@ export default async function handler(req, res) {
   
     const { prompt } = req.body;
   
+    const chapterInstruction =
+      'ABSOLUTE STRICT RULE: Every single chapter body must contain EXACTLY 3 sentences. Count them. No chapter may have 2 sentences or 4 sentences. Exactly 3. This is non-negotiable.';
+
     const statsInstruction =
       'Generate a stats object that reflects where this person ends up after following through on their decision. Use these rules: ' +
       '1) Bold risky decisions like quitting jobs, moving abroad, or starting businesses should have high variance — finance between 35-85, fulfilment between 60-90. ' +
@@ -15,7 +18,7 @@ export default async function handler(req, res) {
       '5) Never make all scores high or all scores low — life is always a tradeoff. ' +
       '6) Overall is the average of finance happiness and relationships. Return stats as: stats with finance happiness health relationships and overall where all numbers are between 20 and 95.';
   
-    const fullPrompt = `${prompt}\n\n${statsInstruction}`;
+    const fullPrompt = `${prompt}\n\n${chapterInstruction}\n\n${statsInstruction}`;
   
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

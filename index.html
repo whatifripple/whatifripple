@@ -286,7 +286,8 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     </div>
     <div class="field">
       <label>Anything else we should know?</label>
-      <textarea id="extra" rows="2" maxlength="150" placeholder="Add any extra context about your life that might be relevant..."></textarea>
+      <textarea id="extra" rows="2" maxlength="200" placeholder="Add any extra context about your life that might be relevant..." oninput="chkExtra()"></textarea>
+      <div class="char-count" id="extra-char-count">0 / 200</div>
     </div>
   </div>
   <button class="btn btn-primary inactive" id="btn1" onclick="goSnapshot()">See your life snapshot →</button>
@@ -418,6 +419,14 @@ function chkD(){
   if(len>300){document.getElementById('decision').value=val.slice(0,300);return;}
   var btn=document.getElementById('btn3');
   if(len>=10){btn.classList.remove('inactive');}else{btn.classList.add('inactive');}
+}
+
+function chkExtra(){
+  var val=document.getElementById('extra').value||'';
+  var len=val.length;
+  var el=document.getElementById('extra-char-count');
+  if(el)el.textContent=len+' / 200';
+  if(len>200){document.getElementById('extra').value=val.slice(0,200);if(el)el.textContent='200 / 200';}
 }
 
 function setEx(el){document.getElementById('decision').value=el.textContent;chkD();}
@@ -712,6 +721,8 @@ function reset(){
   document.getElementById('decision').value='';
   document.getElementById('extra').value='';
   document.getElementById('char-count').textContent='0 / 300';
+  var extraCount=document.getElementById('extra-char-count');
+  if(extraCount)extraCount.textContent='0 / 200';
   document.getElementById('btn3').classList.add('inactive');
   document.getElementById('btn1').classList.add('inactive');
   FIELDS.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
