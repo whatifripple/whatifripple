@@ -262,7 +262,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
         <select id="living" onchange="chk()"><option value="">Select</option><option>Renting</option><option>Own my home</option><option>Living with family</option><option>Living with partner</option><option>Homeless / transitional</option></select>
       </div>
       <div class="field"><label>Current situation</label>
-        <select id="job" onchange="chk()"><option value="">Select</option><option>Student</option><option>Employed</option><option>Entrepreneur</option><option>Unemployed</option><option>Between jobs</option><option>Other</option></select>
+        <select id="job" onchange="chk()"><option value="">Select</option><option>Student</option><option>Employed</option><option>Entrepreneur</option><option>Unemployed</option><option>Retired</option><option>Other</option></select>
       </div>
     </div>
     <div class="grid2">
@@ -440,7 +440,7 @@ function buildSnapshot(){
   var stats=[];
   var incMap={1:12,2:35,3:62,4:83,5:96};
   var incPct=incMap[p.salary]||35;
-  var careerBaseMap={Student:48,Employed:62,Entrepreneur:58,Unemployed:38,'Between jobs':42,Other:52};
+  var careerBaseMap={Student:48,Employed:62,Entrepreneur:58,Unemployed:38,Retired:55,Other:52};
   var careerBase=careerBaseMap[p.job]||52;
   var careerPct=Math.max(10,Math.min(95,Math.round(careerBase+(incPct-50)*0.3)));
   var careerMsg;
@@ -496,7 +496,7 @@ function deterministicStoryStats(p){
   var incMap={1:12,2:35,3:62,4:83,5:96};
   var incPct=incMap[p.salary]||35;
 
-  var careerBaseMap={Student:48,Employed:62,Entrepreneur:58,Unemployed:38,'Between jobs':42,Other:52};
+  var careerBaseMap={Student:48,Employed:62,Entrepreneur:58,Unemployed:38,Retired:55,Other:52};
   var careerBase=careerBaseMap[p.job]||52;
   var careerPct=Math.max(10,Math.min(95,Math.round(careerBase+(incPct-50)*0.3)));
 
