@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--ink:#0d1f1e;--paper:#f7faf9;--accent:#1a7a6e;--accent2:#2aa898;--accent-light:#e6f5f3;--accent-border:#b2ddd8;--accent-text:#0f5c52;--muted:#7a9490;--border:#d8e6e4;--card:#ffffff;--surface:#f0f7f6}
 html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;width:100%}
-#app{width:100%;max-width:480px;margin:0 auto;padding:0 1rem 80px;overflow-x:hidden}
+#app{width:100%;max-width:480px;margin:0 auto;padding:0 0 80px;overflow-x:hidden;box-sizing:border-box;}
 .header{padding:2.5rem 1.5rem 1rem;text-align:center}
 .logo{font-family:'DM Serif Display',serif;font-size:2.6rem;color:var(--ink);letter-spacing:-.02em;line-height:1}
 .logo em{color:var(--accent);font-style:italic}
@@ -56,7 +56,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
 .stat-bar-track{height:6px;background:var(--surface);border-radius:3px;overflow:hidden;margin-bottom:.5rem}
 .stat-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1.2s ease}
 .stat-message{font-size:.82rem;color:#2a4442;line-height:1.5}
-.overall-card{margin:0 auto 1.5rem;background:var(--ink);border-radius:16px;padding:1.5rem;text-align:center;width:calc(100% - 2rem);max-width:100%;box-sizing:border-box}
+.overall-card{margin:0 auto 1rem;background:var(--ink);border-radius:16px;padding:1.5rem;text-align:center;width:calc(100% - 2rem);max-width:100%;box-sizing:border-box}
 .overall-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:#4a7a76;margin-bottom:.5rem}
 .overall-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent2);line-height:1}
 .overall-sub{font-size:.85rem;color:#7ab8b2;margin-top:.5rem}
@@ -76,7 +76,7 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
 .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.75rem .5rem;text-align:center}
 .stat-num{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--accent);display:block}
 .stat-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:.15rem;display:block}
-.chapter{margin:0 1rem 1rem;opacity:0;animation:fadeUp .6s forwards;max-width:100%}
+.chapter{margin:0 auto 1rem;opacity:0;animation:fadeUp .6s forwards;width:calc(100% - 2rem);max-width:100%;box-sizing:border-box}
 .chapter-age{font-size:.72rem;color:var(--accent);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.3rem}
 .chapter-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:.6rem;color:var(--ink)}
 .chapter-body{font-size:.92rem;line-height:1.8;color:#2a4442;font-weight:300}
