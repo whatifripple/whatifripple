@@ -423,6 +423,7 @@ function chkD(){
 function setEx(el){document.getElementById('decision').value=el.textContent;chkD();}
 
 function goSnapshot(){
+  window.scrollTo(0,0);
   if(document.getElementById('btn1').classList.contains('inactive'))return;
   profile={
     name:v('fname'),age:parseInt(v('age')),gender:v('gender'),rel:v('rel'),
@@ -431,7 +432,6 @@ function goSnapshot(){
   };
   buildSnapshot();
   show('s-intake',false);show('s-snapshot',true);
-  window.scrollTo(0,0);
 }
 
 function buildSnapshot(){
@@ -565,9 +565,9 @@ function buildLifeNow(p){
   });
 }
 
-function goDecision(){show('s-snapshot',false);show('s-decision',true);window.scrollTo(0,0);}
-function goBack1(){show('s-snapshot',false);show('s-intake',true);}
-function goBack2(){show('s-decision',false);show('s-snapshot',true);}
+function goDecision(){window.scrollTo(0,0);show('s-snapshot',false);show('s-decision',true);}
+function goBack1(){window.scrollTo(0,0);show('s-snapshot',false);show('s-intake',true);}
+function goBack2(){window.scrollTo(0,0);show('s-decision',false);show('s-snapshot',true);}
 
 function runSim(){
   if(document.getElementById('btn3').classList.contains('inactive'))return;
@@ -645,8 +645,8 @@ function buildResult(story){
   var overall=typeof s.overall==='number'?s.overall:sDet.overall;
   var rng=seeded(p.name.split('').reduce(function(a,c){return a+c.charCodeAt(0);},0)*p.age);
 
-  show('s-loading',false);show('s-result',true);
   window.scrollTo(0,0);
+  show('s-loading',false);show('s-result',true);
   document.getElementById('r-name').textContent=p.name+"'s story";
   var short=p.decision.length>60?p.decision.slice(0,57)+'...':p.decision;
   document.getElementById('r-decision').textContent='"'+short+'"';
