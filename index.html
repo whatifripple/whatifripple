@@ -120,7 +120,12 @@ html,body{background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-se
     <div class="section-sub">The more honest you are, the more real your story becomes.</div>
     <div class="field"><label>Name</label><input id="fname" type="text" placeholder="Your name" oninput="chk()"/></div>
     <div class="grid2">
-      <div class="field"><label>Age</label><input id="age" type="number" min="18" max="99" oninput="chk()"/></div>
+      <div class="field"><label>Age</label>
+        <select id="age" onchange="chk()">
+          <option value="">Select</option>
+          <option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option><option>32</option><option>33</option><option>34</option><option>35</option><option>36</option><option>37</option><option>38</option><option>39</option><option>40</option><option>41</option><option>42</option><option>43</option><option>44</option><option>45</option><option>46</option><option>47</option><option>48</option><option>49</option><option>50</option><option>51</option><option>52</option><option>53</option><option>54</option><option>55</option><option>56</option><option>57</option><option>58</option><option>59</option><option>60</option><option>61</option><option>62</option><option>63</option><option>64</option><option>65</option><option>66</option><option>67</option><option>68</option><option>69</option><option>70</option><option>71</option><option>72</option><option>73</option><option>74</option><option>75</option><option>76</option><option>77</option><option>78</option><option>79</option><option>80</option><option>81</option><option>82</option><option>83</option><option>84</option><option>85</option>
+        </select>
+      </div>
       <div class="field"><label>Gender</label>
         <select id="gender" onchange="chk()"><option value="">Select</option><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select>
       </div>
@@ -426,6 +431,7 @@ function goSnapshot(){
   };
   buildSnapshot();
   show('s-intake',false);show('s-snapshot',true);
+  window.scrollTo(0,0);
 }
 
 function buildSnapshot(){
@@ -559,7 +565,7 @@ function buildLifeNow(p){
   });
 }
 
-function goDecision(){show('s-snapshot',false);show('s-decision',true);}
+function goDecision(){show('s-snapshot',false);show('s-decision',true);window.scrollTo(0,0);}
 function goBack1(){show('s-snapshot',false);show('s-intake',true);}
 function goBack2(){show('s-decision',false);show('s-snapshot',true);}
 
@@ -567,6 +573,7 @@ function runSim(){
   if(document.getElementById('btn3').classList.contains('inactive'))return;
   profile.decision=document.getElementById('decision').value.trim();
   show('s-decision',false);show('s-loading',true);
+  window.scrollTo(0,0);
   var lines=[
     ["What if...","Your decision is rippling forward through time."],
     ["What if you had...","Some doors are opening. Others are closing. Both are okay."],
@@ -600,10 +607,18 @@ function runSim(){
 
 async function generateStory(){
   var p=profile;
-  var futureOffset=p.age>=65?15:(65-p.age);
+  var targetAge;
+  if(p.age>=60){
+    targetAge=80;
+    if(targetAge<=p.age)targetAge=Math.min(85,p.age+20);
+  }else{
+    targetAge=65;
+  }
+  var futureOffset=targetAge-p.age;
+  if(futureOffset<0)futureOffset=0;
   var lateAge=p.age+futureOffset;
-  var timingText=p.age>=65
-    ? '2. Be told in 4 chapters: one year after their decision, three years after, ten years after, and then about fifteen years from now when they are around age '+lateAge+', looking ahead at what might unfold.\n'
+  var timingText=p.age>=60
+    ? '2. Be told in 4 chapters: one year after their decision, three years after, ten years after, and then at age '+lateAge+', looking ahead at what might unfold.\n'
     : '2. Be told in 4 chapters: one year after their decision, three years after, ten years after, and then at age 65, looking back over their entire life.\n';
     var prompt='You are writing a deeply personal, emotionally resonant life simulation for someone who has shared their real life situation and a decision they are considering.\n\nHere is their profile:\n- Name: '+p.name+'\n- Age: '+p.age+'\n- Gender: '+p.gender+'\n- Location: '+p.location+'\n- Relationship status: '+p.rel+'\n- Children: '+p.children+'\n- Living situation: '+p.living+'\n- Current situation: '+p.job+'\n- Annual income bracket: '+['Under $20k','$20k-$50k','$50k-$100k','$100k-$200k','$200k+'][p.salary-1]+'\n- Net worth bracket: '+['Deep in debt over $50k','In debt $10k-$50k','Slightly negative','Around zero','$1k-$25k','$25k-$100k','$100k-$500k','$500k-$1M','$1M+'][p.networth+3]+'\n- Anything else we should know?: '+p.extra+'\n\nTheir decision: "'+p.decision+'"\n\nWrite their hypothetical life story if they go through with this decision. The story must:\n1. Directly reference their specific decision and personal situation throughout\n'+timingText+'3. STRICT RULE: Each chapter must be exactly 3 sentences. No more, no less.\n4. End on an encouraging note — the core message is "you have options, you are not stuck"\n5. Use italics sparingly for emotional emphasis with <em> tags\n6. Feel personal, warm, and literary — not generic\n\nRespond ONLY with valid JSON in this exact format, no markdown, no backticks:\n{"chapters":[{"yrs":1,"title":"Chapter title","body":"Chapter text with optional <em>emphasis</em>"},{"yrs":3,"title":"Chapter title","body":"Chapter text"},{"yrs":10,"title":"Chapter title","body":"Chapter text"},{"yrs":'+futureOffset+',"title":"Chapter title","body":"Chapter text"}],"verdict":"One powerful closing sentence about their journey","stats":{"finance":65,"happiness":72,"health":68,"relationships":70,"overall":69}}';  
 
@@ -631,6 +646,7 @@ function buildResult(story){
   var rng=seeded(p.name.split('').reduce(function(a,c){return a+c.charCodeAt(0);},0)*p.age);
 
   show('s-loading',false);show('s-result',true);
+  window.scrollTo(0,0);
   document.getElementById('r-name').textContent=p.name+"'s story";
   var short=p.decision.length>60?p.decision.slice(0,57)+'...':p.decision;
   document.getElementById('r-decision').textContent='"'+short+'"';
